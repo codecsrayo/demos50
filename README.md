@@ -47,3 +47,14 @@ Haz clic en el siguiente enlace si tienes dudas sobre cómo citar y referenciar 
 
 ## Refresh
 ![Refresh](img/refresh.png)
+
+## feature
+
+## Navigation
+![nav](img/nav.png)
+
+## Scroll
+![scroll](img/scroll.png)
+
+## Card
+![card](img/card.png)

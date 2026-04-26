@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             if (dbHelper.checkLogin(user, pass)) {
-                Intent intent = new Intent(LoginActivity.this, UserMenuActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                 intent.putExtra("username", user);
                 startActivity(intent);
                 finish();

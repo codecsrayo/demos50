@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demos50">
 
-        <!-- 1. Splash - punto de entrada -->
+        <!-- 1. Splash -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -24,22 +26,19 @@
         </activity>
 
         <!-- 2. Login con SQLite -->
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Demos50" />
+        <activity android:name=".LoginActivity" android:exported="false" />
 
-        <!-- 3. Menú de usuario con CRUD -->
-        <activity
-            android:name=".UserMenuActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Demos50" />
+        <!-- 3. Menú principal -->
+        <activity android:name=".MenuActivity" android:exported="false" />
 
-        <!-- Actividad principal original -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Demos50" />
+        <!-- 4. Gestión de usuarios -->
+        <activity android:name=".UserMenuActivity" android:exported="false" />
+
+        <!-- 5. Pokédex -->
+        <activity android:name=".PokemonActivity" android:exported="false" />
+
+        <!-- Original -->
+        <activity android:name=".MainActivity" android:exported="false" />
 
     </application>
 

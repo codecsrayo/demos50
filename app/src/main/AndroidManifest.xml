@@ -11,16 +11,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Demos50">
+
+        <!-- 1. Splash - punto de entrada -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Demos50">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 2. Login con SQLite -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Demos50" />
+
+        <!-- 3. Menú de usuario con CRUD -->
+        <activity
+            android:name=".UserMenuActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Demos50" />
+
+        <!-- Actividad principal original -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Demos50" />
+
     </application>
 
 </manifest>

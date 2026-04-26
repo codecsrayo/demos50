@@ -34,6 +34,19 @@
                 android:gravity="center"
                 android:background="@color/purple_700">
 
+                <Button
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:text="← Volver"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_alignParentStart="true"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp" />
+
                 <ImageView
                     android:id="@+id/ivDetailSprite"
                     android:layout_width="140dp"

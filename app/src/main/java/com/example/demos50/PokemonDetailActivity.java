@@ -53,6 +53,8 @@ public class PokemonDetailActivity extends AppCompatActivity {
         progressBar   = findViewById(R.id.detailProgressBar);
         layoutContent = findViewById(R.id.layoutContent);
 
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
         fetchDetail(pokemonId);
     }
 

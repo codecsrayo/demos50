@@ -1,49 +1,170 @@
-# Objetivo
-Configurar un ambiente de desarrollo para dispositivos móviles y otros conceptos de actividades, mediante la codificación en Java para Android.
+# 📱 Demos50 — s20 | Android + SQLite
 
- 
+> Actividad S20: Aplicación Android en **Java** con tres actividades mínimas, autenticación y gestión de usuarios mediante SQLite.
 
-## Instrucciones
-Desarrolla una aplicación móvil teniendo presente los siguientes datos:
+---
 
-Codificar tres activitys mínimo, una es un splash, la otra es un login conectado a base de datos y la tercera es un menú de usuario..
+## 🎯 Objetivo
 
-El Splash debe durar 5 segundos y luego dar paso a la Actividad de Login
+Configurar un ambiente de desarrollo para dispositivos móviles mediante la codificación en Java para Android, implementando al menos tres actividades con persistencia de datos local.
 
-Crear la base de datos SQLite y gestionarla a través de un activity haciendo referencia a una tabla especifica
+---
 
-Antes de iniciar, recomendamos revisar la rúbrica, donde podrás identificar los aspectos que el tutor evaluará, en el desarrollo de esta actividad.
+## 🗺️ Flujo de navegación
 
-Finalmente, haz clic en el botón Entrega para enviar el archivo al tutor.
+```mermaid
+flowchart TD
+    A([🚀 App Start]) --> B[SplashActivity\n⏱️ 5 segundos]
+    B -->|Handler.postDelayed| C[LoginActivity\n🔐 Usuario + Contraseña]
+    C -->|checkLogin SQLite ✅| D[UserMenuActivity\n👤 Menú de usuario]
+    C -->|Credenciales inválidas ❌| C
+    D -->|Agregar| E((Dialogo\nNuevo usuario))
+    D -->|Tap en item| F((Opciones\nEditar / Eliminar))
+    D -->|Cerrar sesión| C
+```
 
-> [!TIP] Normas APA
-Haz clic en el siguiente enlace si tienes dudas sobre cómo citar y referenciar las fuentes que utilizaste:
-[Guía para realizar citas y referencias basadas en el formato de estilo de la American Psychological Association (APA), sexta edición  (Enlaces a un sitio externo.).](https://www.um.es/documents/378246/2964900/Normas+APA+Sexta+Edici%C3%B3n.pdf/27f8511d-95b6-4096-8d3e-f8492f61c6dc)
+---
 
-## Rubrica
+## 🏗️ Diagrama de clases
 
+```mermaid
+classDiagram
+    class SplashActivity {
+        -int SPLASH_DURATION
+        +onCreate(Bundle)
+        +Handler postDelayed 5000ms
+    }
 
-| Criterios | Calificaciones (Excelente) | Calificaciones (Bueno) | Calificaciones (Deficiente) | Pts |
+    class LoginActivity {
+        -EditText etUsername
+        -EditText etPassword
+        -Button btnLogin
+        -DatabaseHelper dbHelper
+        +onCreate(Bundle)
+        +validar() void
+    }
+
+    class UserMenuActivity {
+        -DatabaseHelper dbHelper
+        -ListView lvUsers
+        -ArrayList~String~ userList
+        +loadUsers() void
+        +showAddDialog() void
+        +showEditDialog(int) void
+        +confirmDelete(int) void
+    }
+
+    class DatabaseHelper {
+        -String DATABASE_NAME
+        -int DATABASE_VERSION
+        +TABLE_USERS : String
+        +onCreate(SQLiteDatabase) void
+        +onUpgrade(SQLiteDatabase, int, int) void
+        +insertUser(String, String, String) long
+        +checkLogin(String, String) bool
+        +getAllUsers() Cursor
+        +updateUser(int, String, String, String) int
+        +deleteUser(int) int
+    }
+
+    SplashActivity --> LoginActivity : navega →
+    LoginActivity --> UserMenuActivity : navega →
+    LoginActivity ..> DatabaseHelper : checkLogin()
+    UserMenuActivity ..> DatabaseHelper : CRUD
+```
+
+---
+
+## 🗄️ Base de datos SQLite
+
+```mermaid
+erDiagram
+    USERS {
+        INTEGER id PK "AUTOINCREMENT"
+        TEXT username UK "NOT NULL"
+        TEXT password    "NOT NULL"
+        TEXT email       "NOT NULL"
+    }
+```
+
+### Operaciones CRUD
+
+| Operación | Método | Descripción |
+|-----------|--------|-------------|
+| **C**reate | `insertUser(username, password, email)` | Agrega un nuevo usuario |
+| **R**ead | `checkLogin(user, pass)` | Verifica credenciales en login |
+| **R**ead | `getAllUsers()` | Retorna Cursor con todos los registros |
+| **U**pdate | `updateUser(id, username, password, email)` | Modifica un registro existente |
+| **D**elete | `deleteUser(id)` | Elimina usuario por ID |
+
+---
+
+## ⏱️ Ciclo de vida — SplashActivity
+
+```mermaid
+sequenceDiagram
+    participant SO as Android OS
+    participant S as SplashActivity
+    participant H as Handler
+    participant L as LoginActivity
+
+    SO->>S: onCreate()
+    S->>S: setContentView(activity_splash)
+    S->>H: postDelayed(5000ms)
+    Note over H: Espera 5 segundos
+    H->>S: Runnable ejecutado
+    S->>L: startActivity(Intent)
+    S->>S: finish()
+```
+
+---
+
+## 📁 Estructura
+
+```
+app/src/main/java/com/example/demos50/
+├── SplashActivity.java      # Activity 1 — pantalla de carga
+├── LoginActivity.java       # Activity 2 — autenticación
+├── UserMenuActivity.java    # Activity 3 — gestión de usuarios
+└── DatabaseHelper.java      # Helper SQLite con CRUD completo
+
+app/src/main/res/layout/
+├── activity_splash.xml
+├── activity_login.xml
+├── activity_user_menu.xml
+└── dialog_user.xml
+```
+
+---
+
+## ▶️ Credenciales por defecto
+
+```
+Usuario:    admin
+Contraseña: 1234
+```
+
+---
+
+## 📸 Capturas
+
+| Splash | Login | CRUD |
+|--------|-------|------|
+| ![Loading](img/load.png) | ![Login](img/login.png) | ![CRUD](img/crud.png) |
+
+| Eliminar | Actualizar |
+|----------|-----------|
+| ![Delete](img/delete.png) | ![Refresh](img/refresh.png) |
+
+---
+
+## 📋 Rúbrica
+
+| Criterios | Excelente | Bueno | Deficiente | Pts |
 | :--- | :--- | :--- | :--- | :--- |
-| **Producto software aplicación móvil** | **40 pts**<br>La aplicación maneja el CRUD con SQLite u otra base de datos, permitiendo al usuario el uso completo de la aplicación con navegación, diseño y persistencia. | **20 pts**<br>Completa solo el 60% de la aplicación o no cumple con la totalidad del CRUD y la navegabilidad, impidiendo que el usuario utilice la aplicación de forma correcta. | **0 pts**<br>Se procede con el 20 % o menos de los pasos para desarrollar la app | 40 pts |
-| **Construcción de BD** | **30 pts**<br>Construye la base de datos en SQLite implementando las librerías necesarias y creando los objetos necesarios para su funcionamiento. | **20 pts**<br>La base de datos esta incompleta, no permite el funcionamiento en su totalidad o no se implementaron las librerías necesarias. | **0 pts**<br>Entrega parcial sin los criterios solicitados. | 30 pts |
-| **Puntualidad y entrega** | **30 pts**<br>Entrega puntual y correctamente según lo pactado. | **20 pts**<br>Entrega puntualmente, pero hay errores de formato. | **0 pts**<br>Su entrega se realiza fuera del tiempo pactado y su formato es errado. | 30 pts |
-| **Puntos totales** | | | | **100** |
+| **Producto software** | CRUD con SQLite, navegación y persistencia completa | 60% completado o CRUD incompleto | 20% o menos | 40 |
+| **Construcción de BD** | SQLite con librerías y objetos correctos | BD incompleta o librerías faltantes | Entrega parcial | 30 |
+| **Puntualidad** | Entrega puntual y correcta | Puntual con errores de formato | Fuera del tiempo pactado | 30 |
+| **Total** | | | | **100** |
 
-
-## Result
-
-## Loading
-![Loading](img/load.png)
-
-## Login
-![Login](img/login.png)
-
-## CRUD
-![CRUD](img/crud.png)
-
-## Delete
-![Delete](img/delete.png)
-
-## Refresh
-![Refresh](img/refresh.png)
+> 📖 [Guía APA Sexta Edición](https://www.um.es/documents/378246/2964900/Normas+APA+Sexta+Edici%C3%B3n.pdf/27f8511d-95b6-4096-8d3e-f8492f61c6dc)

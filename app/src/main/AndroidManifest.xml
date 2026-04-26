@@ -36,6 +36,7 @@
 
         <!-- 5. Pokédex -->
         <activity android:name=".PokemonActivity" android:exported="false" />
+        <activity android:name=".PokemonDetailActivity" android:exported="false" />
 
         <!-- Original -->
         <activity android:name=".MainActivity" android:exported="false" />

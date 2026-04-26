@@ -1,5 +1,6 @@
 package com.example.demos50;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,6 +46,14 @@ public class PokemonActivity extends AppCompatActivity {
 
         adapter = new PokemonAdapter(this, pokemonList);
         lvPokemon.setAdapter(adapter);
+
+        lvPokemon.setOnItemClickListener((parent, view, position, id) -> {
+            Pokemon p = pokemonList.get(position);
+            Intent intent = new Intent(this, PokemonDetailActivity.class);
+            intent.putExtra("pokemon_id",   p.getId());
+            intent.putExtra("pokemon_name", p.getName());
+            startActivity(intent);
+        });
 
         fetchPokemon();
     }

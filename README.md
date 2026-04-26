@@ -1,60 +1,193 @@
-# Objetivo
-Configurar un ambiente de desarrollo para dispositivos móviles y otros conceptos de actividades, mediante la codificación en Java para Android.
+# 📱 Demos50 — Aplicación Android con SQLite y PokeAPI
 
- 
+> Proyecto académico desarrollado en **Java para Android** que implementa autenticación, gestión de usuarios con SQLite y consumo de API REST.
 
-## Instrucciones
-Desarrolla una aplicación móvil teniendo presente los siguientes datos:
+---
 
-Codificar tres activitys mínimo, una es un splash, la otra es un login conectado a base de datos y la tercera es un menú de usuario..
+## 🎯 Objetivo
 
-El Splash debe durar 5 segundos y luego dar paso a la Actividad de Login
+Configurar un ambiente de desarrollo para dispositivos móviles mediante la codificación en Java para Android, implementando navegación entre actividades, persistencia de datos con SQLite y consumo de servicios web externos.
 
-Crear la base de datos SQLite y gestionarla a través de un activity haciendo referencia a una tabla especifica
+---
 
-Antes de iniciar, recomendamos revisar la rúbrica, donde podrás identificar los aspectos que el tutor evaluará, en el desarrollo de esta actividad.
+## 🗺️ Flujo de navegación
 
-Finalmente, haz clic en el botón Entrega para enviar el archivo al tutor.
+```mermaid
+flowchart TD
+    A([🚀 Inicio]) --> B[SplashActivity\n⏱️ 5 segundos]
+    B --> C[LoginActivity\n🔐 Autenticación SQLite]
+    C -->|Credenciales válidas| D[MenuActivity\n🏠 Menú principal]
+    C -->|Credenciales inválidas| C
+    D --> E[UserMenuActivity\n👤 Gestión de Usuarios]
+    D --> F[PokemonActivity\n⚡ Pokédex]
+    F -->|Click en pokémon| G[PokemonDetailActivity\n📊 Detalle completo]
+    G -->|← Volver| F
+    E -->|Cerrar sesión| C
+```
 
-> [!TIP] Normas APA
-Haz clic en el siguiente enlace si tienes dudas sobre cómo citar y referenciar las fuentes que utilizaste:
-[Guía para realizar citas y referencias basadas en el formato de estilo de la American Psychological Association (APA), sexta edición  (Enlaces a un sitio externo.).](https://www.um.es/documents/378246/2964900/Normas+APA+Sexta+Edici%C3%B3n.pdf/27f8511d-95b6-4096-8d3e-f8492f61c6dc)
+---
 
-## Rubrica
+## 🏗️ Arquitectura de actividades
 
+```mermaid
+classDiagram
+    class SplashActivity {
+        +SPLASH_DURATION: 5000ms
+        +onCreate()
+    }
+    class LoginActivity {
+        -DatabaseHelper dbHelper
+        +checkLogin(user, pass) bool
+    }
+    class MenuActivity {
+        +cardUsers
+        +cardPokemon
+    }
+    class UserMenuActivity {
+        -DatabaseHelper dbHelper
+        +loadUsers()
+        +showAddDialog()
+        +showEditDialog(id)
+        +confirmDelete(id)
+    }
+    class DatabaseHelper {
+        +DATABASE: demos50.db
+        +TABLE: users
+        +insertUser() long
+        +checkLogin() bool
+        +getAllUsers() Cursor
+        +updateUser() int
+        +deleteUser() int
+    }
+    class PokemonActivity {
+        -List~Pokemon~ pokemonList
+        +fetchPokemon()
+    }
+    class PokemonDetailActivity {
+        +fetchDetail(id)
+    }
 
-| Criterios | Calificaciones (Excelente) | Calificaciones (Bueno) | Calificaciones (Deficiente) | Pts |
+    SplashActivity --> LoginActivity
+    LoginActivity --> MenuActivity
+    LoginActivity ..> DatabaseHelper
+    MenuActivity --> UserMenuActivity
+    MenuActivity --> PokemonActivity
+    UserMenuActivity ..> DatabaseHelper
+    PokemonActivity --> PokemonDetailActivity
+```
+
+---
+
+## 🗄️ Esquema de base de datos SQLite
+
+```mermaid
+erDiagram
+    USERS {
+        INTEGER id PK
+        TEXT    username UK
+        TEXT    password
+        TEXT    email
+    }
+```
+
+| Operación | Método | Descripción |
+|-----------|--------|-------------|
+| Create | `insertUser(username, password, email)` | Registro de nuevo usuario |
+| Read | `getAllUsers()` / `checkLogin()` | Listado y autenticación |
+| Update | `updateUser(id, username, password, email)` | Edición de datos |
+| Delete | `deleteUser(id)` | Eliminación con confirmación |
+
+---
+
+## 🌐 Integración PokeAPI
+
+```mermaid
+sequenceDiagram
+    participant U as Usuario
+    participant A as PokemonActivity
+    participant P as PokeAPI
+    participant D as PokemonDetailActivity
+
+    U->>A: Abre Pokédex
+    A->>P: GET /api/v2/pokemon?limit=40
+    P-->>A: JSON lista
+    A-->>U: ListView con 40 pokémon
+
+    U->>A: Click en pokémon
+    A->>D: Intent(id, nombre)
+    D->>P: GET /api/v2/pokemon/{id}
+    P-->>D: JSON detalle
+    D-->>U: Sprite + stats + tipos + habilidades
+```
+
+| Endpoint | Uso |
+|----------|-----|
+| `GET /api/v2/pokemon?limit=40` | Lista paginada |
+| `GET /api/v2/pokemon/{id}` | Detalle por ID |
+| `sprites/pokemon/{id}.png` | Sprite estático |
+| `sprites/.../animated/front_default` | Sprite animado gen-V |
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+app/src/main/java/com/example/demos50/
+├── SplashActivity.java
+├── LoginActivity.java
+├── MenuActivity.java
+├── UserMenuActivity.java
+├── DatabaseHelper.java
+├── PokemonActivity.java
+├── PokemonDetailActivity.java
+├── PokemonAdapter.java
+└── Pokemon.java
+```
+
+---
+
+## 🛠️ Stack tecnológico
+
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| Java | 11 | Lenguaje principal |
+| Android SDK | 36 | Target platform |
+| SQLite | built-in | Persistencia local |
+| Glide | 4.16.0 | Carga de imágenes |
+| PokeAPI | v2 | Datos de pokémon |
+| Material 3 | 1.10.0 | Componentes UI |
+
+---
+
+## ▶️ Cómo ejecutar
+
+1. Clonar el repositorio
+2. Abrir en **Android Studio**
+3. Sincronizar Gradle
+4. Ejecutar en emulador o dispositivo (minSdk 24)
+5. Credenciales por defecto: `admin` / `1234`
+
+---
+
+## 📸 Capturas
+
+| Splash | Login | Menú |
+|--------|-------|------|
+| ![Loading](img/load.png) | ![Login](img/login.png) | ![nav](img/nav.png) |
+
+| CRUD Usuarios | Pokédex | Card |
+|---------------|---------|------|
+| ![CRUD](img/crud.png) | ![scroll](img/scroll.png) | ![card](img/card.png) |
+
+---
+
+## 📋 Rúbrica
+
+| Criterios | Excelente | Bueno | Deficiente | Pts |
 | :--- | :--- | :--- | :--- | :--- |
-| **Producto software aplicación móvil** | **40 pts**<br>La aplicación maneja el CRUD con SQLite u otra base de datos, permitiendo al usuario el uso completo de la aplicación con navegación, diseño y persistencia. | **20 pts**<br>Completa solo el 60% de la aplicación o no cumple con la totalidad del CRUD y la navegabilidad, impidiendo que el usuario utilice la aplicación de forma correcta. | **0 pts**<br>Se procede con el 20 % o menos de los pasos para desarrollar la app | 40 pts |
-| **Construcción de BD** | **30 pts**<br>Construye la base de datos en SQLite implementando las librerías necesarias y creando los objetos necesarios para su funcionamiento. | **20 pts**<br>La base de datos esta incompleta, no permite el funcionamiento en su totalidad o no se implementaron las librerías necesarias. | **0 pts**<br>Entrega parcial sin los criterios solicitados. | 30 pts |
-| **Puntualidad y entrega** | **30 pts**<br>Entrega puntual y correctamente según lo pactado. | **20 pts**<br>Entrega puntualmente, pero hay errores de formato. | **0 pts**<br>Su entrega se realiza fuera del tiempo pactado y su formato es errado. | 30 pts |
-| **Puntos totales** | | | | **100** |
+| **Producto software** | CRUD completo, navegación y persistencia | 60% o CRUD incompleto | 20% o menos | 40 |
+| **Construcción de BD** | SQLite con librerías y objetos correctos | BD incompleta | Entrega parcial | 30 |
+| **Puntualidad** | Entrega puntual y correcta | Puntual con errores | Fuera de tiempo | 30 |
+| **Total** | | | | **100** |
 
-
-## Result
-
-## Loading
-![Loading](img/load.png)
-
-## Login
-![Login](img/login.png)
-
-## CRUD
-![CRUD](img/crud.png)
-
-## Delete
-![Delete](img/delete.png)
-
-## Refresh
-![Refresh](img/refresh.png)
-
-## feature
-
-## Navigation
-![nav](img/nav.png)
-
-## Scroll
-![scroll](img/scroll.png)
-
-## Card
-![card](img/card.png)
+> 📖 [Guía APA Sexta Edición](https://www.um.es/documents/378246/2964900/Normas+APA+Sexta+Edici%C3%B3n.pdf/27f8511d-95b6-4096-8d3e-f8492f61c6dc)

@@ -29,3 +29,21 @@ Haz clic en el siguiente enlace si tienes dudas sobre cómo citar y referenciar 
 | **Construcción de BD** | **30 pts**<br>Construye la base de datos en SQLite implementando las librerías necesarias y creando los objetos necesarios para su funcionamiento. | **20 pts**<br>La base de datos esta incompleta, no permite el funcionamiento en su totalidad o no se implementaron las librerías necesarias. | **0 pts**<br>Entrega parcial sin los criterios solicitados. | 30 pts |
 | **Puntualidad y entrega** | **30 pts**<br>Entrega puntual y correctamente según lo pactado. | **20 pts**<br>Entrega puntualmente, pero hay errores de formato. | **0 pts**<br>Su entrega se realiza fuera del tiempo pactado y su formato es errado. | 30 pts |
 | **Puntos totales** | | | | **100** |
+
+
+## Result
+
+## Loading
+![Loading](img/load.png)
+
+## Login
+![Login](img/login.png)
+
+## CRUD
+![CRUD](img/crud.png)
+
+## Delete
+![Delete](img/delete.png)
+
+## Refresh
+![Refresh](img/refresh.png)
